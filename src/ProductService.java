@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductService {
 
@@ -13,12 +14,7 @@ public class ProductService {
     }
 
     public Product getProductByName(String productName) {
-        for (Product product : products) {
-            if (product.getName().equals(productName)) {
-                return product;
-            }
-        }
-        return null;
+       return products.stream().filter(product -> product.getName().equals(productName)).findFirst().orElse(null);
     }
 
     public void checkIfTheProductExists(Product product) {
@@ -31,34 +27,18 @@ public class ProductService {
     }
 
     public Product getProductByPlace(String productPlace) {
-        for (Product product : products) {
-            if (product.getPlace().equals(productPlace)) {
-                return product;
-            }
-        }
-        return null;
+        return products.stream().filter(product -> product.getPlace().equals(productPlace)).findFirst().orElse(null);
     }
 
     public List<Product> allProductsWithExpiredWarranties(int warrantyDate) {
-        for (Product product : products) {
-            if(product.getWarranty() < warrantyDate) {
-                return products;
-            }
-        }
-        return null;
+        return products.stream().filter(product -> product.getWarranty() < warrantyDate).collect(Collectors.toList());
     }
 
     public List<Product> getProductWithText(String productText) {
         String text = productText.toLowerCase();
-        List<Product> pros = new ArrayList<>();
-        for (Product product : products) {
-            String productName = product.getName().toLowerCase();
-            String productPlace = product.getPlace().toLowerCase();
-            String productType = product.getType().toLowerCase();
-
-            if (productName.contains(text)|| productType.contains(text) ||productPlace.contains(text)){
-                pros.add(product);
-            }
-        }return pros;
+       return products.stream().filter(product ->
+               product.getName().toLowerCase().contains(text)||
+               product.getType().toLowerCase().contains(text)||
+               product.getPlace().toLowerCase().contains(text)).collect(Collectors.toList());
     }
 }

@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -30,10 +31,12 @@ public class Main {
         productService.addProduct(new Product("外星人m18", "旗舰游戏本", "VIP体验室", 2024));
 
         //查询所有信息
-        List<Product> allProducts = productService.getAllProducts();
-        for (Product product : allProducts) {
-            System.out.println(product);
-        }
+//        List<Product> allProducts = productService.getAllProducts();
+//        for (Product product : allProducts) {
+//            System.out.println(product);
+//        }
+        //流式接口
+        productService.getAllProducts().forEach(System.out::println);
 
         System.out.println("=======================================");
 
@@ -50,14 +53,25 @@ public class Main {
         System.out.println("=========================================");
 
         System.out.println("输入质保期查询质保过期商品");
-        List<Product> allProductsWithExpiredWarranties = productService.allProductsWithExpiredWarranties(scanner.nextInt());
-        for (Product product : allProductsWithExpiredWarranties) {
-            System.out.println(product);
-        }
+//        List<Product> allProductsWithExpiredWarranties = productService.allProductsWithExpiredWarranties(scanner.nextInt());
+//        for (Product product : allProductsWithExpiredWarranties) {
+//            System.out.println(product);
+//        }
+        Optional.ofNullable(productService.allProductsWithExpiredWarranties(scanner.nextInt()))
+                .filter(list -> !list.isEmpty())
+                .ifPresentOrElse(
+                        list -> list.forEach(System.out::println),
+                        () -> System.out.println("未有商品")
+                );
 
-        List<Product> pros = productService.getProductWithText(scanner.next());
-        for (Product product : pros) {
-            System.out.println(product);
-        }
+
+
+
+        System.out.println("模糊查询");
+//        List<Product> pros = productService.getProductWithText(scanner.next());
+//        for (Product product : pros) {
+//            System.out.println(product);
+//        }
+        productService.getProductWithText(scanner.next()).forEach(System.out::println);
     }
 }
